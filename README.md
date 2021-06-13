@@ -9,6 +9,8 @@ You must have node.js installed and minecraft java edition with the computer cra
 - Next, place the json.lua and rewrite.lua into the file directory of a turtle.
   - Computercraft files are saved in .minecraft/saves/[world name]/computercraft/computer/[id of the computer]
 - Now open a terminal window in the wsServer folder and run node ./listenForWeb.js
+- Now we need to set the ip for both the turtle and the controller to connect to. If you are running the server on the same computer as minecraft and the controller, you do not need to change the ip. If you are however going to run the server on a different computer to either the minecraft or the controller, you must change the IP in each one to the ip of the computer that the server is running on.
+- Also, if you run it on localhost, you must go in to the cc config at .minecraft/[world name]/serverconfig/computercraft-server.toml and edit line 53 to say "allow". This will stop computer craft from blocking local connections.
 - Now place a turtle in minecraft and on the turtle execute rewrite.lua
 - Now load up controller.html
 - It should now be connected and you will be able to control the turtle with the controller.
