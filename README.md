@@ -1,4 +1,4 @@
-# remote-control-turtle
+# Remote Control Computer Craft Turtle Using Websocket
 This is a program that will allow you to remote control a turtle using a websocket in computer craft.
 
 How to use:
