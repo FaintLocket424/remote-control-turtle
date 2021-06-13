@@ -1,6 +1,5 @@
 local json = require('json')
 
---local ws, err = http.websocket('ws://195.213.164.145:8081')
 local ws, err = http.websocket('ws://localhost:8081')
 
 while (true) do
