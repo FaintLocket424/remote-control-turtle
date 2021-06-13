@@ -1,0 +1,167 @@
+<html>
+    <title>Remote Control Turtle</title>
+    <p1>
+        <input type="text" id="Input1">
+        <button type="button" onclick="ws('left')">Left</button>
+        <button type="button" onclick="ws('right')">Right</button>
+        <button type="button" onclick="ws('up')">Up</button>
+        <button type="button" onclick="ws('down')">Down</button>
+        <button type="button" onclick="ws('forward')">Forward</button>
+        <button type="button" onclick="ws('back')">Back</button>
+        <button type="button" onclick="ws('label')">Label</button>
+        <button type="button" onclick="ws('refuel')">Refuel</button>
+        <button type="button" onclick="ws('dig')">Dig</button>
+        <button type="button" onclick="ws('digUp')">Dig Up</button>
+        <button type="button" onclick="ws('digDown')">Dig Down</button>
+        <button type="button" onclick="ws('place')">Place</button>
+        <button type="button" onclick="ws('placeUp')">Place Up</button>
+        <button type="button" onclick="ws('placeDown')">Place Down</button>
+        <button type="button" onclick="ws('select')">Select</button>
+        <button type="button" onclick="ws('equipLeft')">Equip Left</button>
+        <button type="button" onclick="ws('equipRight')">Equip Right</button>
+        <button type="button" onclick="ws('getInv')">Update Inventory</button>
+        <button type="button" onclick="ws('inspectPerInv')">Inspect Peripheral Inventory</button>
+        <button type="button" onclick="ws('inspectBlocks')">Inspect Blocks</button>
+        <button type="button" onclick="ws('locate')">GPS Locate</button>
+        <button type="button" onclick="ws('updateSelected')">Update Selected</button>
+        <button type="button" onclick="ws('exitTurtle')">Close Turtle Connection</button>
+        <button type="button" onclick="ws('exitHTML')">Close HTML Connection</button>
+    </p1>
+
+    <p1>
+        <ul id="blocks">
+            <li id="blockInfront">Block Infront: Unknown</li>
+            <li id="blockAbove">Block Above: Unknown</li>
+            <li id="blockBelow">Block Below: Unknown</li>
+        </ul>
+    </p1>
+
+    <pi>
+        <ul id="location">
+            GPS Location:
+            <li id="xlocation">X: Unknown</li>
+            <li id="ylocation">Y: Unknown</li>
+            <li id="zlocation">Z: Unknown</li>
+        </ul>
+    </pi>
+
+    <p1>
+        <ul id="inventory">
+            Inventory:
+            <li style="color:black" id="inv1">1: Unknown</li>
+            <li style="color:black" id="inv2">2: Unknown</li>
+            <li style="color:black" id="inv3">3: Unknown</li>
+            <li style="color:black" id="inv4">4: Unknown</li>
+            <li style="color:black" id="inv5">5: Unknown</li>
+            <li style="color:black" id="inv6">6: Unknown</li>
+            <li style="color:black" id="inv7">7: Unknown</li>
+            <li style="color:black" id="inv8">8: Unknown</li>
+            <li style="color:black" id="inv9">9: Unknown</li>
+            <li style="color:black" id="inv10">10: Unknown</li>
+            <li style="color:black" id="inv11">11: Unknown</li>
+            <li style="color:black" id="inv12">12: Unknown</li>
+            <li style="color:black" id="inv13">13: Unknown</li>
+            <li style="color:black" id="inv14">14: Unknown</li>
+            <li style="color:black" id="inv15">15: Unknown</li>
+            <li style="color:black" id="inv16">16: Unknown</li>
+        </ul>
+    </p1>
+
+    <p1>
+        <ul id="peripheral">
+            Peripheral Inventory:
+            <li id="per1">1: Unknown</li>
+            <li id="per2">2: Unknown</li>
+            <li id="per3">3: Unknown</li>
+            <li id="per4">4: Unknown</li>
+            <li id="per5">5: Unknown</li>
+            <li id="per6">6: Unknown</li>
+            <li id="per7">7: Unknown</li>
+            <li id="per8">8: Unknown</li>
+            <li id="per9">9: Unknown</li>
+            <li id="per10">10: Unknown</li>
+            <li id="per11">11: Unknown</li>
+            <li id="per12">12: Unknown</li>
+            <li id="per13">13: Unknown</li>
+            <li id="per14">14: Unknown</li>
+            <li id="per15">15: Unknown</li>
+            <li id="per16">16: Unknown</li>
+            <li id="per17">17: Unknown</li>
+            <li id="per18">18: Unknown</li>
+            <li id="per19">19: Unknown</li>
+            <li id="per20">20: Unknown</li>
+            <li id="per21">21: Unknown</li>
+            <li id="per22">22: Unknown</li>
+            <li id="per23">23: Unknown</li>
+            <li id="per24">24: Unknown</li>
+            <li id="per25">25: Unknown</li>
+            <li id="per26">26: Unknown</li>
+            <li id="per27">27: Unknown</li>
+        </ul>
+    </p1>
+    
+    <script>
+        //const socket = new WebSocket('ws://195.213.164.145:8081');
+        const socket = new WebSocket('ws://localhost:8081');
+        function ws(instruction) {
+            if (instruction === 'exitHTML') {
+                socket.close()
+            } else {
+                let message = {
+                    target: '2',
+                    instruction: instruction,
+                    data: document.getElementById("Input1").value
+                };
+                let payload = JSON.stringify(message);
+                socket.send(payload);
+            };
+        };
+
+        socket.onmessage = function(wsmessage){
+            let messageString = wsmessage.data;
+            let message = JSON.parse(messageString);
+
+            console.log('message received');
+            console.log(message);
+            console.log(message.target);
+            console.log(message.instruction);
+            console.log(message.data);
+
+            if (message.target == '1') {
+                if (message.instruction == 'receiveInv') {
+                    for (let counter = 1;counter <= 16;counter++) {
+                        if (message['data'][counter - 1]['count'] == '0') {
+                            document.getElementById("inv" + counter).innerText = counter + ': ' + message['data'][counter - 1]['name'];
+                        } else {
+                            document.getElementById("inv" + counter).innerText = counter + ': ' + message['data'][counter - 1]['name'] + ' Count: ' + message['data'][counter - 1]['count'];
+                        };
+                    };
+
+                } else if (message.instruction == 'receivePerInv') {
+                    for (let counter = 1;counter <= message['data']['size'];counter++) {
+                        if (message['data'][String(counter)]['count'] == '0') {
+                            document.getElementById("per" + counter).innerText = counter + ': ' + message['data'][String(counter)]['name'];
+                        } else {
+                            document.getElementById("per" + counter).innerText = counter + ': ' + message['data'][String(counter)]['name'] + ' Count: ' + message['data'][String(counter)]['count'];
+                        };
+                    };
+
+                } else if (message.instruction == 'receiveBlocks') {
+                    document.getElementById("blockInfront").innerText = 'Block Infront: ' + message.data.infront;
+                    document.getElementById("blockAbove").innerText = 'Block Above: ' + message.data.above;
+                    document.getElementById("blockBelow").innerText = 'Block Below: ' + message.data.below;
+
+                } else if (message.instruction == 'receiveLocate') {
+                    document.getElementById("xlocation").innerText = 'X: ' + message.data.x
+                    document.getElementById("ylocation").innerText = 'Y: ' + message.data.y
+                    document.getElementById("zlocation").innerText = 'Z: ' + message.data.z
+                } else if (message.instruction == 'receiveSelected') {
+                    for (let counter = 1 ;counter <= 16 ;counter++) {
+                        document.getElementById("inv" + counter).style = 'color:black'
+                    };
+                    document.getElementById("inv" + message.data).style = 'color:red'
+                };
+            };
+        };
+    </script>
+</html>
